@@ -1,0 +1,20 @@
+#!/bin/bash
+# A script to take in parameters for:
+#   - Which command to use (curl or h2load)
+#       - If h2load, how many requests to send
+#   - What file size to ping (10KB, 100KB, 1MB, 2MB, 8MB, 10KB)
+# Returns the output of the command with specified parameters
+
+echo -e "Which command would you like to use?"
+read comm
+echo "(If you chose h2load, how many requests would you like to send? If you said curl, please type ""na""."
+read req
+echo "Please enter the file size you would like to request from the following options: tenkb, hundredkb, onemb, twomb, eightmb, and tenmb: "
+read filesize
+
+if [ $comm = "curl" ]
+then
+    curl http://localhost:81/$filesize
+elif [ $comm = "h2load" ]
+then h2load --h1 -n$req -c100 -m10 http://localhost:81/$filesize
+fi

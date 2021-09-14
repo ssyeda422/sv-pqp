@@ -1,0 +1,37 @@
+server {
+       listen 81;
+       listen [::]:81;
+
+       server_name example.com;
+
+       root /var/www/warmup;
+       index index.html upload_test;
+
+       location / {
+               try_files $uri $uri/ =404;
+       }
+
+       location /tenkb {
+               try_files $uri $uri/ =404;
+       }
+
+       location /hundredkb {
+               try_files $uri $uri/ =404;
+       }
+
+       location /onemb {
+               try_files $uri $uri/ =404;
+       }
+
+       location /twomb {
+               try_files $uri $uri/ =404;
+       }
+
+       location /eightmb {
+               try_files $uri $uri/ =404;
+       }
+
+       location /tenmb {
+               try_files $uri $uri/ =404;
+       }
+}

@@ -1,0 +1,19 @@
+Warm up exercise 1
+	1. Set up nginx in a virtual machine (virtualbox or whatever you prefer) or in Docker, such that:
+		- Create a series of simple zero-filled objects of various sizes (10kb, 100kb, 1mb, 2mb, 8mb, 10mb).
+		- These objects should be served when GET requests hit NGINX
+	2. Install curl and experiment with making requests to your local nginx with curl.
+	3. Download, compile, and run h2load (https://nghttp2.org/)
+	4. Experiment with h2load requesting objects from nginx
+
+Extra items if you finish the above:
+	- Can you get nginx to listen on a unix socket?
+	- How does the requests per second compare between running:
+		- H2load against nginx on a TCP socket vs
+		- H2load against nginx on a unix socket
+	- If time permits, experiment with increasing the number of the threads for both nginx and h2load.
+	- What is the maximum number of requests per second you can get? 
+
+If possible, we'd love to have the deliverables for this warm-up project be a public github repo containing:
+	- a script (or program or whatever you prefer) which sets the environment described above up, and runs curl or h2load
+    - A README markdown file documenting the implementation, how to run it, and any tricky issues you ran into
