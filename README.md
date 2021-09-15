@@ -15,7 +15,7 @@ Then, based on the user's input, the script will return the output of the comman
 
 ## Directions:
 
-To run this script, you can either use bash or add it to your path and run with the command <warmup-script>. In addition, make sure the warmup folders under both sites-enabled and www are included in the appropriate directories.
+To run this script, you can either use bash or add it to your path and run with the command `<warmup-script>`. In addition, make sure the warmup folders under both sites-enabled and www are included in the appropriate directories.
 
 Nginx and h2load must both be installed in your environment. As mentioned above, once the server is started up, the host will be listening on port 81. 
 
