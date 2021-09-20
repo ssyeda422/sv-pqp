@@ -19,4 +19,9 @@ To run this script, you can either use bash or add it to your path and run with 
 
 Nginx and h2load must both be installed in your environment. As mentioned above, once the server is started up, the host will be listening on port 81. 
 
+### Extra: UNIX Socket Directions
+
+To listen on a UNIX socket, I used the `socat` command to create a socket, and then added the configurations within the `sites-enabled/warmup` file. To enable this, you will first need to install the Linux package socat using the command: `sudo apt install socat`. Next, create a socket called test.sock within your `/var/run` folder using the command: `sudo socat unix-listen:/var/run/test.sock,fork /dev/null&`. 
+Lastly, just uncomment the commented out sections in the `sites-enabled/warmup` file, and restart nginx. The server should now be listening on a unix socket!
+
 
