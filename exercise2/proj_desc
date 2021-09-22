@@ -1,0 +1,17 @@
+Once you've done the above... let's learn about strace!
+		- Easily the most useful tool as a professional software developer.
+		- Make sure you have strace installed in your VM
+		- Man page is here: https://man7.org/linux/man-pages/man1/strace.1.html
+		- Try the following:
+				- Run nginx
+				- Attach strace to the running nginx [note: make sure to follow forks check the man page]
+				- Issue 1 request with curl (or h2load) and look at the output of strace
+				- You should see calls showing your request processing... if you don't, you may have forgotten to follow forks.
+				- What does the output tell you? Anything cool, interesting, or unexpected?
+				- Save a copy of the output in a text file toss it in git, we can talk about it next time.
+
+		- You may be curious how strace works... I wrote a few blog posts on the blog of a previous company I was running about it that links to kernel code and stuff (they renamed the author though to remove my name lololol):
+			- https://packagecloud.io/blog/strace-cheat-sheet/
+			- https://packagecloud.io/blog/how-does-strace-work/
+	
+- When you have this working and pushed up to git, make sure to tag it, let's call it 'exercise-2'. Then we'll be able to compare exercise1 vs exercise2 to see what changes were made.
