@@ -9,6 +9,8 @@ echo -e "Which command would you like to use?"
 read comm
 echo "(If you chose h2load, how many requests would you like to send? If you said curl, please type ""na""."
 read req
+echo "Would you like to connect to nginx using tcp, unix, or all?"
+read conn
 echo "Please enter the file size you would like to request from the following options: tenkb, hundredkb, onemb, twomb, eightmb, and tenmb: "
 read filesize
 
@@ -18,21 +20,24 @@ if ! test -f "$SOCK"; then
     sudo socat unix-listen:/var/run/test.sock,fork /dev/null&
 fi
 
-if [ $comm = "curl" ]
-then
-    curl http://localhost:81/$filesize
-elif [ $comm = "h2load" ]
-then 
-    echo "Would you like to connect to nginx using tcp, unix, or all?"
-    read conn
-    if [ $conn = "tcp" ]
-    then 
-        h2load --h1 -n$req -c100 -m10 http://localhost:81/$filesize
-    elif [ $conn = "unix" ]
-    then 
-        h2load --h1 -n100 -c100 -m1 --base-uri=unix:/var/run/test.sock http://localhost:81
+if [ $conn = "tcp" ]; then
+    if [ $comm = "curl" ]; then
+        curl http://localhost:81/$filesize
     else
         h2load --h1 -n$req -c100 -m10 http://localhost:81/$filesize
-        h2load --h1 -n100 -c100 -m1 --base-uri=unix:/var/run/test.sock http://localhost:81
+    fi
+elif [ $conn = "unix" ]; then
+    if [ $comm = "curl" ]; then
+        sudo curl -v  --unix-socket /var/run/test.sock http://localhost:81/$filesize
+    else
+        h2load --h1 -n10 -c10 -m1 --base-uri=unix:/var/run/test.sock http://localhost:81/$filesize
+    fi
+else
+    if [ $comm = "curl" ]; then
+        curl http://localhost:81/$filesize
+        sudo curl -v  --unix-socket /var/run/test.sock http://localhost:81/$filesize
+    else
+        h2load --h1 -n$req -c100 -m10 http://localhost:81/$filesize
+        h2load --h1 -n10 -c10 -m1 --base-uri=unix:/var/run/test.sock http://localhost:81/$filesize
     fi
 fi
