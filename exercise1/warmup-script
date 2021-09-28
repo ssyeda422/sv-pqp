@@ -14,12 +14,6 @@ read conn
 echo "Please enter the file size you would like to request from the following options: tenkb, hundredkb, onemb, twomb, eightmb, and tenmb: "
 read filesize
 
-SOCK=/var/run/test.sock
-
-if ! test -f "$SOCK"; then
-    sudo socat unix-listen:/var/run/test.sock,fork /dev/null&
-fi
-
 if [ $conn = "tcp" ]; then
     if [ $comm = "curl" ]; then
         curl http://localhost:81/$filesize
@@ -28,16 +22,16 @@ if [ $conn = "tcp" ]; then
     fi
 elif [ $conn = "unix" ]; then
     if [ $comm = "curl" ]; then
-        sudo curl -v  --unix-socket /var/run/test.sock http://localhost:81/$filesize
+        sudo curl -v  --unix-socket /tmp/test.sock http://localhost/$filesize
     else
-        h2load --h1 -n10 -c10 -m1 --base-uri=unix:/var/run/test.sock http://localhost:81/$filesize
+        h2load --h1 -n$req -c10 -m1 --base-uri=unix:/tmp/test.sock http://localhost/$filesize
     fi
 else
     if [ $comm = "curl" ]; then
         curl http://localhost:81/$filesize
-        sudo curl -v  --unix-socket /var/run/test.sock http://localhost:81/$filesize
+        sudo curl -v  --unix-socket /tmp/test.sock http://localhost/$filesize
     else
         h2load --h1 -n$req -c100 -m10 http://localhost:81/$filesize
-        h2load --h1 -n10 -c10 -m1 --base-uri=unix:/var/run/test.sock http://localhost:81/$filesize
+        h2load --h1 -n$req -c10 -m1 --base-uri=unix:/tmp/test.sock http://localhost/$filesize
     fi
 fi
