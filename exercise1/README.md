@@ -9,9 +9,10 @@ The `/var/www/warmup` folder is included as well, with each file under its own f
 Finally, this folder contains a simple bash script `warmup-script.sh` which asks the user:
 - Which command to use (`curl` or `h2load`)
 - If `h2load`, how many requests to send
+- Whether to use tcp, unix, or all to connect to nginx
 - And finally, which file size to ping out of the following options: tenkb, hundredkb, onemb, twomb, eightmb, and tenmb.
 
-Then, based on the user's input, the script will return the output of the commands, pinging the server http://localhost:81 with the specified filesize extension.
+Then, based on the user's input, the script will return the output of the commands, pinging the server with the specified filesize extension.
 
 ## Directions:
 
@@ -21,7 +22,8 @@ Nginx and h2load must both be installed in your environment. As mentioned above,
 
 ### Extra: UNIX Socket Directions
 
-To listen on a UNIX socket, I used the `socat` command to create a socket, and then added the configurations within the `sites-enabled/warmup` file. To enable this, you will first need to install the Linux package socat using the command: `sudo apt install socat`. Next, create a socket called test.sock within your `/var/run` folder using the command: `sudo socat unix-listen:/var/run/test.sock,fork /dev/null&`. 
-Lastly, just uncomment the commented out sections in the `sites-enabled/warmup` file, and restart nginx. The server should now be listening on a unix socket!
+To listen on a UNIX socket, I added in a listen directive in the configuration file under the `etc/nginx/sites-enabled` directory with: `listen unix:/tmp/test.sock`. This creates a socket in the specified directory when nginx starts up on localhost. 
+
+Then, in the bash script, I wrote in the options for either `curl` or `h2load` to listen on that unix socket if users specify. To do so for curl, I just added in the unix flag to the command: `--unix-socket /tmp/test.sock`. h2load uses a similar flag: `--base-uri=unix:/tmp/test.sock`. With these commands, the server will listen on any available localhost port instead of specifically 81, so a port number is not included.
 
 
