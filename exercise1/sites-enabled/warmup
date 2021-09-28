@@ -1,20 +1,14 @@
-# Setting up upstream testapp unix socket server - uncomment to run (check README for additional instructions)
-# upstream testapp {
-#         server unix:/var/run/test.sock;
-# }
-
 server {
        listen 81;
        listen [::]:81;
-
-       server_name example.com;
+       listen unix:/tmp/test.sock;
 
        root /var/www/warmup;
        index index.html upload_test;
 
+       server_name _;
+
        location / {
-               # Using proxy pass to listen on testapp - uncomment to run
-               # proxy_pass http://testapp;
                try_files $uri $uri/ =404;
        }
 
