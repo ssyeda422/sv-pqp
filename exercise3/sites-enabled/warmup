@@ -1,0 +1,17 @@
+server {
+       listen 81 ssl;
+       listen [::]:81;
+       listen unix:/tmp/test.sock ssl;
+
+       index index.html upload_test;
+
+       server_name ssyeda;
+       ssl_certificate /etc/nginx/openssl/ssyeda.crt;
+       ssl_certificate_key /etc/nginx/openssl/ssyeda.key;
+       ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+       ssl_ciphers HIGH:!aNULL:!MD5;
+
+       location / {
+               root /var/www/warmup;
+       }
+}

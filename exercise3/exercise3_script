@@ -1,0 +1,37 @@
+#!/bin/bash
+# A script to take in parameters for:
+#   - Which command to use (curl or h2load)
+#       - If h2load, how many requests to send
+#   - What file size to ping (10KB, 100KB, 1MB, 2MB, 8MB, 10KB)
+# Returns the output of the command with specified parameters
+
+echo -e "Which command would you like to use?"
+read comm
+echo "(If you chose h2load, how many requests would you like to send? If you said curl, please type ""na""."
+read req
+echo "Would you like to connect to nginx using tcp, unix, or all?"
+read conn
+echo "Please enter the file size you would like to request from the following options: tenkb, hundredkb, onemb, twomb, eightmb, and tenmb: "
+read filesize
+
+if [ $conn = "tcp" ]; then
+    if [ $comm = "curl" ]; then
+        curl -v -k https://localhost:81/$filesize
+    else
+        h2load --h1 -n$req -c100 -m10 https://localhost:81/$filesize
+    fi
+elif [ $conn = "unix" ]; then
+    if [ $comm = "curl" ]; then
+        sudo curl -v -k --unix-socket /tmp/test.sock https://localhost/$filesize
+    else
+        h2load --h1 -n$req -c10 -m1 --base-uri=unix:/tmp/test.sock https://localhost/$filesize
+    fi
+else
+    if [ $comm = "curl" ]; then
+        curl -v -k https://localhost:81/$filesize
+        sudo curl -v -k --unix-socket /tmp/test.sock https://localhost/$filesize
+    else
+        h2load --h1 -n$req -c100 -m10 https://localhost:81/$filesize
+        h2load --h1 -n$req -c10 -m1 --base-uri=unix:/tmp/test.sock https://localhost/$filesize
+    fi
+fi
